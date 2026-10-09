@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHero from '../components/SiteHero.astro';
+import DynamicDivider from '../components/DynamicDivider.astro';
+import { site } from '../data/site';
+---
+<BaseLayout title="聯絡">
+  <SiteHero title="聯絡" />
+  <DynamicDivider />
+  <section class="section contact-list">
+    <a href={`mailto:${site.email}`}><span>Email</span><strong>{site.email}</strong></a>
+    <a href="https://sites.google.com/mcjh.ptc.edu.tw/edychie" target="_blank" rel="noreferrer"><span>AI 智能閱卷系統</span><strong>前往網站 ↗</strong></a>
+  </section>
+</BaseLayout>

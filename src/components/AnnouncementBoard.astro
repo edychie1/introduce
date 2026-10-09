@@ -1,0 +1,20 @@
+---
+const announcements = [
+  { date: '2026.10.09', label: '網站更新', text: '文章新增標籤篩選功能，並依發布日期由新到舊排列。' },
+  { date: '持續更新', label: '近期計畫', text: '持續整理學習筆記、程式作品與開發歷程。' },
+];
+---
+<aside class="announcement-board" aria-label="布告欄">
+  <div class="announcement-inner">
+    <div class="announcement-heading"><span class="announcement-pin" aria-hidden="true">✦</span><div><p>ECC NOTICE</p><h2>布告欄</h2></div></div>
+    <div class="announcement-list">
+      {announcements.map((item) => (
+        <article class="announcement-item">
+          <time>{item.date}</time>
+          <h3>{item.label}</h3>
+          <p>{item.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</aside>

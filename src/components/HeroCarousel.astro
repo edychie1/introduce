@@ -1,0 +1,17 @@
+---
+import { site } from '../data/site';
+---
+<section class="hero-wrap" aria-label="首頁主視覺">
+  <div class="hero-carousel" data-carousel>
+    {site.heroImages.map((image, index) => <img src={image.src} alt={image.alt} class:list={{ active: index === 0 }} loading={index === 0 ? 'eager' : 'lazy'} />)}
+    <div class="hero-shade"></div>
+    <div class="hero-title"><h1>首頁</h1></div>
+  </div>
+</section>
+<script is:inline>
+  const carousel = document.querySelector('[data-carousel]');
+  if (carousel) {
+    const images = [...carousel.querySelectorAll('img')]; let current = 0;
+    if (images.length > 1) setInterval(() => { images[current].classList.remove('active'); current = (current + 1) % images.length; images[current].classList.add('active'); }, 5200);
+  }
+</script>

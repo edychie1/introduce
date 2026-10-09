@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHero from '../components/SiteHero.astro';
+import DynamicDivider from '../components/DynamicDivider.astro';
+import { timeline } from '../data/site';
+---
+<BaseLayout title="歷程">
+  <SiteHero title="歷程" />
+  <DynamicDivider />
+  <section class="section timeline-page">
+    <div class="timeline-intro reveal">
+      <span class="timeline-kicker">一路走來</span>
+      <h2>我的成長軌跡</h2>
+      <p>把每一次開始、嘗試與學習，都留在時間裡。</p>
+    </div>
+    <div class="timeline-track">
+      {timeline.map((item, index) => (
+        <article class={`timeline-event reveal ${index % 2 === 0 ? 'timeline-left' : 'timeline-right'}`}>
+          <span class="timeline-node" aria-hidden="true"></span>
+          <div class="timeline-card">
+            <time>{item.date}</time>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

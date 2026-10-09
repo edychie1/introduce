@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHero from '../components/SiteHero.astro';
+import DynamicDivider from '../components/DynamicDivider.astro';
+import { skills } from '../data/site';
+---
+<BaseLayout title="關於我">
+  <SiteHero title="關於我" />
+  <DynamicDivider />
+  <section class="section about-content">
+    <div class="intro-block">
+      <h2>自我介紹</h2>
+      <p>我是一位國中三年級自學 Python 程式，但程式不強的人，APCS 大學程式先修檢測才考過初級而已。</p>
+    </div>
+    <div class="skills-block">
+      <div class="section-title"><span>01</span><h2>我的技能條</h2></div>
+      <p class="skills-caption">每項滿分 100，這些數字只是我目前對自己的小小評價。</p>
+      <div class="skills-list">
+        {skills.map(skill => (
+          <div class="skill-row">
+            <div class="skill-label"><span>{skill.name}</span><strong>{skill.score}</strong></div>
+            <div class="skill-track" aria-label={`${skill.name} ${skill.score} 分`}><span style={`width:${skill.score}%`}></span></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHero from '../components/SiteHero.astro';
+import DynamicDivider from '../components/DynamicDivider.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ProfileSidebar from '../components/ProfileSidebar.astro';
+import StatsSidebar from '../components/StatsSidebar.astro';
+import AnnouncementBoard from '../components/AnnouncementBoard.astro';
+import { projects, timeline } from '../data/site';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+---
+<BaseLayout title="首頁">
+  <SiteHero title="首頁" />
+  <DynamicDivider />
+  <div class="home-lower">
+    <ProfileSidebar />
+    <div class="home-data">
+      <section class="section reveal">
+        <div class="section-title"><span>01</span><h2>精選作品</h2><a href={`${base}projects/`}>看全部 →</a></div>
+        <div class="project-grid">{projects.map(project => <ProjectCard project={project} />)}</div>
+      </section>
+      <section class="section split reveal">
+        <div><div class="section-title"><span>02</span><h2>最近歷程</h2></div><p class="large-copy">記錄學習、開發與每一次把想法實際做出來的過程。</p></div>
+        <div class="timeline-mini">{timeline.map(item => <div class="timeline-item"><small>{item.date}</small><div><h3>{item.title}</h3><p>{item.description}</p></div></div>)}</div>
+      </section>
+      <section class="contact-teaser reveal"><p>有想法、想合作，或只是想聊聊？</p><a href={`${base}contact/`}>聯絡我 →</a></section>
+    </div>
+    <div class="home-right"><AnnouncementBoard /><StatsSidebar /></div>
+  </div>
+</BaseLayout>

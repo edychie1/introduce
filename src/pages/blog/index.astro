@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteHero from '../../components/SiteHero.astro';
+import DynamicDivider from '../../components/DynamicDivider.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort((a, b) => a.localeCompare(b, 'zh-TW'));
+---
+<BaseLayout title="文章">
+  <SiteHero title="文章" />
+  <DynamicDivider />
+  <section class="section post-list" aria-label="文章列表">
+    <div class="blog-tools">
+      <label class="blog-search-label" for="blog-search">搜尋文章或標籤</label>
+      <input id="blog-search" class="blog-search" type="search" placeholder="輸入關鍵字或標籤，例如 Python" autocomplete="off" />
+      <div class="tag-filters" aria-label="依標籤篩選">
+        <button class="tag-filter is-active" type="button" data-tag="">全部文章 <span>{posts.length}</span></button>
+        {tags.map((tag) => <button class="tag-filter" type="button" data-tag={tag}>{tag} <span>{posts.filter((post) => post.data.tags.includes(tag)).length}</span></button>)}
+      </div>
+      <p class="blog-result-count" id="blog-result-count" aria-live="polite">共 {posts.length} 篇文章，依發布日期由新到舊排列</p>
+    </div>
+    <div class="blog-posts" id="blog-posts">
+      {posts.map((post) => (
+        <a class="post-row reveal" href={`${base}blog/${post.id}/`} data-title={post.data.title} data-description={post.data.description} data-tags={post.data.tags.join('|')}>
+          <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('zh-TW')}</time>
+          <div class="post-main">
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+            {post.data.tags.length > 0 && <div class="post-tags" aria-label="文章標籤">{post.data.tags.map((tag) => <span class="post-tag">#{tag}</span>)}</div>}
+          </div>
+          <span class="post-arrow" aria-hidden="true">→</span>
+        </a>
+      ))}
+      <p class="blog-empty" id="blog-empty" hidden>找不到符合條件的文章，試試其他關鍵字或標籤。</p>
+    </div>
+  </section>
+  <script>
+    const searchInput = document.querySelector<HTMLInputElement>('#blog-search');
+    const filterButtons = [...document.querySelectorAll<HTMLButtonElement>('.tag-filter')];
+    const postRows = [...document.querySelectorAll<HTMLElement>('.post-row')];
+    const resultCount = document.querySelector<HTMLElement>('#blog-result-count');
+    const emptyState = document.querySelector<HTMLElement>('#blog-empty');
+    let selectedTag = '';
+    const filterPosts = () => {
+      const query = (searchInput?.value ?? '').trim().toLocaleLowerCase();
+      let visible = 0;
+      postRows.forEach((post) => {
+        const title = post.dataset.title ?? '';
+        const description = post.dataset.description ?? '';
+        const tags = (post.dataset.tags ?? '').split('|').filter(Boolean);
+        const matchesQuery = `${title} ${description} ${tags.join(' ')}`.toLocaleLowerCase().includes(query);
+        const matchesTag = !selectedTag || tags.includes(selectedTag);
+        const show = matchesQuery && matchesTag;
+        post.hidden = !show;
+        if (show) visible += 1;
+      });
+      if (resultCount) resultCount.textContent = `顯示 ${visible} / ${postRows.length} 篇文章（依發布日期由新到舊）`;
+      if (emptyState) emptyState.hidden = visible > 0;
+    };
+    searchInput?.addEventListener('input', filterPosts);
+    const hashMatch = window.location.hash.match(/^#tag=(.*)$/);
+    if (hashMatch) {
+      const tagFromHash = decodeURIComponent(hashMatch[1]);
+      const matchingButton = filterButtons.find((button) => button.dataset.tag === tagFromHash);
+      if (matchingButton) { selectedTag = tagFromHash; matchingButton.classList.add('is-active'); filterButtons.filter((button) => button !== matchingButton).forEach((button) => button.classList.remove('is-active')); }
+    }
+    filterButtons.forEach((button) => button.addEventListener('click', () => {
+      selectedTag = button.dataset.tag ?? '';
+      filterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+      filterPosts();
+    }));
+  </script>
+</BaseLayout>

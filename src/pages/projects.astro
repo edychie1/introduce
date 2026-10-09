@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHero from '../components/SiteHero.astro';
+import DynamicDivider from '../components/DynamicDivider.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/site';
+---
+<BaseLayout title="作品">
+  <SiteHero title="作品" />
+  <DynamicDivider />
+  <section class="section"><div class="project-grid">{projects.map(project => <ProjectCard project={project} />)}</div></section>
+</BaseLayout>

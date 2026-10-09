@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+const { title = site.name, description = site.description } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const navItems = [
+  ['首頁', ''],
+  ['關於我', 'about/'],
+  ['作品', 'projects/'],
+  ['歷程', 'timeline/'],
+  ['文章', 'blog/'],
+  ['聯絡', 'contact/']
+];
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const basePath = base.replace(/\/+$/, '') || '/';
+const linkPath = (path: string) => `${base}${path}`;
+const isActive = (path: string) => {
+  const target = new URL(linkPath(path), Astro.url).pathname.replace(/\/+$/, '') || '/';
+  return target === currentPath || (path === 'blog/' && currentPath.startsWith(target + '/'));
+};
+---
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}｜{site.shortName}</title>
+  </head>
+  <body>
+    <div class="page-loader" aria-hidden="true">
+      <div class="loader-character"><span class="loader-eye"></span><span class="loader-eye"></span><i></i></div>
+      <div class="loader-text">正在準備網站<span>...</span></div>
+    </div>
+    <div class="site-shell">
+      <div class="site-content">
+        <header class="site-header">
+          <a class="brand-mark" href={base} aria-label="回到首頁"><span>e</span><i>c</i><b>c</b></a>
+          <nav aria-label="主要選單">
+            {navItems.map(([label, path]) => (
+              <a href={linkPath(path)} class:list={{ active: isActive(path) }} aria-current={isActive(path) ? 'page' : undefined}>{label}</a>
+            ))}
+          </nav>
+          <button class="theme-toggle" type="button" aria-label="切換明暗模式" title="切換明暗模式"><span class="theme-icon">☾</span><span class="theme-label">暗色</span></button>
+        </header>
+        <main><slot /></main>
+        <footer class="site-footer">
+          <span>© 2026 {site.shortName}</span>
+          <span>© 2026 by ecc is licensed under CC BY-NC-ND 4.0</span>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </footer>
+      </div>
+    </div>
+    <div id="ambient-effects" aria-hidden="true">
+      <span class="ambient-orb ambient-orb-a"></span>
+      <span class="ambient-orb ambient-orb-b"></span>
+      <span class="ambient-orb ambient-orb-c"></span>
+      <span class="ambient-star ambient-star-a">✦</span>
+      <span class="ambient-star ambient-star-b">·</span>
+      <span class="ambient-star ambient-star-c">✧</span>
+      <span class="ambient-star ambient-star-d">✦</span>
+      <span class="ambient-star ambient-star-e">✧</span>
+      <span class="ambient-star ambient-star-f">✦</span>
+      <span class="ambient-star ambient-star-g">✧</span>
+      <span class="ambient-particle p01">✦</span><span class="ambient-particle p02">·</span>
+      <span class="ambient-particle p03">✧</span><span class="ambient-particle p04">·</span>
+      <span class="ambient-particle p05">✦</span><span class="ambient-particle p06">·</span>
+      <span class="ambient-particle p07">✧</span><span class="ambient-particle p08">·</span>
+      <span class="ambient-particle p09">✦</span><span class="ambient-particle p10">·</span>
+      <span class="ambient-particle p11">✧</span><span class="ambient-particle p12">·</span>
+      <span class="ambient-particle p13">✦</span><span class="ambient-particle p14">·</span>
+      <span class="ambient-particle p15">✧</span><span class="ambient-particle p16">·</span>
+    </div>
+    <div id="click-effects" aria-hidden="true"></div>
+    <script is:inline>
+      const root = document.documentElement;
+      const saved = localStorage.getItem('theme');
+      if (saved) root.dataset.theme = saved;
+      const toggle = document.querySelector('.theme-toggle');
+      const updateTheme = () => {
+        const dark = root.dataset.theme === 'dark';
+        toggle.querySelector('.theme-icon').textContent = dark ? '☀' : '☾';
+        toggle.querySelector('.theme-label').textContent = dark ? '亮色' : '暗色';
+      };
+      updateTheme();
+      toggle.addEventListener('click', () => {
+        root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', root.dataset.theme);
+        updateTheme();
+      });
+      const markLoaded = () => setTimeout(() => document.body.classList.add('loaded'), 150);
+      if (document.readyState === 'complete') markLoaded();
+      else window.addEventListener('load', markLoaded, { once: true });
+      document.addEventListener('click', (e) => {
+        if (e.target.closest('.page-loader')) return;
+        const x = e.clientX, y = e.clientY, box = document.createElement('span');
+        box.className = 'click-burst'; box.style.left = x + 'px'; box.style.top = y + 'px';
+        box.innerHTML = '<b>✦</b><b>·</b><b>♡</b><b>✦</b>';
+        document.querySelector('#click-effects').appendChild(box);
+        setTimeout(() => box.remove(), 620);
+      });
+    </script>
+  </body>
+</html>

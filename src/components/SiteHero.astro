@@ -1,0 +1,27 @@
+---
+import { site } from '../data/site';
+const { title } = Astro.props;
+---
+<section class="site-hero" aria-label={`${title}主視覺`}>
+  <div class="site-hero-carousel" data-site-carousel>
+    {site.heroImages.map((image, index) => (
+      <img src={image.src} alt="" aria-hidden="true" class:list={{ active: index === 0 }} loading={index === 0 ? 'eager' : 'lazy'} />
+    ))}
+    <div class="site-hero-shade"></div>
+    <div class="site-hero-title"><h1>{title}</h1></div>
+  </div>
+</section>
+<script is:inline>
+  const hero = document.querySelector('[data-site-carousel]');
+  if (hero) {
+    const images = [...hero.querySelectorAll('img')];
+    let current = 0;
+    if (images.length > 1) {
+      setInterval(() => {
+        images[current].classList.remove('active');
+        current = (current + 1) % images.length;
+        images[current].classList.add('active');
+      }, 5200);
+    }
+  }
+</script>

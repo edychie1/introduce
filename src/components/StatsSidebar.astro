@@ -1,0 +1,23 @@
+---
+import { projects, skills } from '../data/site';
+const stats = [
+  { value: projects.length, label: '作品' },
+  { value: skills.length, label: '技能' },
+  { value: 6, label: '網站頁面' },
+  { value: '∞', label: '想法' }
+];
+---
+<aside class="stats-sidebar" aria-label="網站統計">
+  <div class="stats-inner">
+    <p class="stats-kicker">網站統計</p>
+    <div class="stats-grid">
+      {stats.map((item) => (
+        <div class="stat-item">
+          <strong>{item.value}</strong>
+          <span>{item.label}</span>
+        </div>
+      ))}
+    </div>
+    <p class="stats-note">持續更新中</p>
+  </div>
+</aside>
