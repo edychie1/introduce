@@ -20,7 +20,7 @@ const isActive = (path: string) => {
 };
 ---
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -41,7 +41,7 @@ const isActive = (path: string) => {
               <a href={linkPath(path)} class:list={{ active: isActive(path) }} aria-current={isActive(path) ? 'page' : undefined}>{label}</a>
             ))}
           </nav>
-          <button class="theme-toggle" type="button" aria-label="切換明暗模式" title="切換明暗模式"><span class="theme-icon">☾</span><span class="theme-label">暗色</span></button>
+          <button class="theme-toggle" type="button" aria-label="切換明暗模式" title="切換明暗模式"><span class="theme-icon">☀</span><span class="theme-label">亮色</span></button>
         </header>
         <main><slot /></main>
         <footer class="site-footer">
@@ -75,7 +75,7 @@ const isActive = (path: string) => {
     <script is:inline>
       const root = document.documentElement;
       const saved = localStorage.getItem('theme');
-      if (saved) root.dataset.theme = saved;
+      root.dataset.theme = saved === 'light' ? 'light' : 'dark';
       const toggle = document.querySelector('.theme-toggle');
       const updateTheme = () => {
         const dark = root.dataset.theme === 'dark';
@@ -91,7 +91,9 @@ const isActive = (path: string) => {
       const markLoaded = () => setTimeout(() => document.body.classList.add('loaded'), 150);
       if (document.readyState === 'complete') markLoaded();
       else window.addEventListener('load', markLoaded, { once: true });
+      const fxAllowed = () => window.matchMedia('(min-width: 901px)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       document.addEventListener('click', (e) => {
+        if (!fxAllowed()) return;
         if (e.target.closest('.page-loader')) return;
         const x = e.clientX, y = e.clientY, box = document.createElement('span');
         box.className = 'click-burst'; box.style.left = x + 'px'; box.style.top = y + 'px';

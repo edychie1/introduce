@@ -14,6 +14,13 @@ export const site = {
 
 export const projects = [
   {
+    title: '桌面小時鐘',
+    description: '用 AI 輔助完成的桌面小時鐘，有 C++ 與 Python 兩個版本，可以比較兩種寫法的差異。',
+    tags: ['C++', 'Python'],
+    url: 'https://github.com/edychie1/clock',
+    linkLabel: '前往 GitHub'
+  },
+  {
     title: 'AI智能閱卷系統：AI三秒幫你改考卷',
     description: 'AI 智能閱卷系統的網站展示，將想法實際做成可以使用的作品。',
     tags: ['AI', 'Python'],
