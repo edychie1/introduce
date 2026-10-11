@@ -69,12 +69,6 @@ body > .site-shell { margin: 0 !important; padding: 0 !important; border: 0 !imp
 @media(max-width:900px){.home-right{position:relative;top:auto;gap:14px}.home-lower .home-right .stats-sidebar{position:relative}.announcement-inner{padding:20px}.blog-tools{padding:18px}.post-row{grid-template-columns:1fr;gap:10px}.post-arrow{display:none}}
 
 
-/* V18: ecc mark strip above the hero carousel */
-.hero-mark{position:absolute;left:28px;right:28px;top:88px;z-index:2;display:flex;align-items:center;gap:13px;pointer-events:none}
-.hero-mark-vline{width:3px;height:26px;background:#000;border-radius:2px;box-shadow:0 1px 4px rgba(255,255,255,.4)}
-.hero-mark-text{color:#000;font-family:"Noto Serif TC",serif;font-weight:700;font-size:19px;line-height:1;letter-spacing:-.12em;transform:skew(-8deg);text-shadow:0 1px 5px rgba(255,255,255,.45)}
-.hero-mark-hline{flex:1;height:3px;background:#000;border-radius:2px;box-shadow:0 1px 4px rgba(255,255,255,.4)}
-
 /* V18: light mode gets visible ambient effects too (multiply keeps colors from washing out) */
 :root:not([data-theme=dark]) body:before{background:radial-gradient(circle at 80% 10%,rgba(109,145,196,.15),transparent 34%)}
 :root:not([data-theme=dark]) #ambient-effects:before{background:conic-gradient(from 0deg at 50% 50%,transparent 0deg,rgba(82,140,220,.15) 28deg,transparent 66deg,rgba(196,124,242,.15) 126deg,transparent 164deg,rgba(60,196,226,.13) 230deg,transparent 268deg)}
@@ -93,10 +87,6 @@ body > .site-shell { margin: 0 !important; padding: 0 !important; border: 0 !imp
   .profile-sidebar,.stats-sidebar,.announcement-board,.timeline-card,.blog-tools{backdrop-filter:none;box-shadow:0 8px 22px rgba(0,0,0,.05)}
   :root{--card:rgba(255,255,255,.93)}
   :root[data-theme=dark]{--card:rgba(13,27,47,.95)}
-  .hero-mark{top:76px;left:16px;right:16px;gap:10px}
-  .hero-mark-vline{width:2px;height:20px}
-  .hero-mark-text{font-size:16px}
-  .hero-mark-hline{height:2px}
 }
 
 /* V18: respect reduced-motion preferences */
@@ -104,4 +94,70 @@ body > .site-shell { margin: 0 !important; padding: 0 !important; border: 0 !imp
   html{scroll-behavior:auto}
   #ambient-effects,.divider-spark,.divider-edge-highlight,.reveal,.loader-character,.loader-text span{animation:none!important}
   .site-hero-carousel img{transition:opacity .3s ease}
+}
+
+
+/* V19: blog list as cards */
+.post-row{position:relative;grid-template-columns:150px 1fr 44px;gap:24px;padding:24px 28px 24px 30px;margin-bottom:14px;border:1px solid var(--line);border-radius:18px;background:var(--card);backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(8,25,52,.05);overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+.post-row::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;border-radius:3px;background:linear-gradient(180deg,#8fb4ea,#b79df0);opacity:.75;transition:opacity .25s,top .25s,bottom .25s}
+.post-row:hover{transform:translateY(-3px);border-color:rgba(130,177,235,.55);box-shadow:0 18px 40px rgba(8,25,52,.1)}
+.post-row:hover::before{opacity:1;top:10px;bottom:10px}
+.post-row time{justify-self:start;align-self:start;font-size:11px;font-weight:600;color:var(--accent);background:rgba(113,157,218,.14);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.post-row h2{font-size:21px;margin:0 0 7px;transition:color .2s}
+.post-row:hover h2{color:var(--accent)}
+.post-row p{font-size:13px;line-height:1.75}
+.post-arrow{width:42px;height:42px;border-radius:50%;background:rgba(113,157,218,.13);color:var(--accent);display:grid;place-items:center;font-size:17px;align-self:center;transition:background .25s,color .25s,transform .25s}
+.post-row:hover .post-arrow{background:var(--accent);color:#fff;transform:translateX(4px)}
+
+/* V19: article page layout */
+.article-header{padding:0 0 26px;border-bottom:1px solid var(--line);margin-bottom:36px}
+.article-kicker{margin:0 0 14px;font-size:11px;font-weight:700;letter-spacing:.22em;color:var(--accent)}
+.article-date{display:inline-block;font-size:12px;font-weight:600;color:var(--accent);background:rgba(113,157,218,.14);padding:6px 12px;border-radius:999px}
+.article-body h1,.article-body h2{font-family:"Noto Serif TC","Noto Sans TC",serif;line-height:1.45}
+.article-body h2{margin-top:50px;padding-left:14px;border-left:4px solid var(--accent)}
+.article-body h3{margin-top:38px;font-size:19px}
+.article-body p{margin:18px 0;line-height:2}
+.article-body ul,.article-body ol{margin:18px 0;padding-left:26px}
+.article-body li{margin:8px 0;line-height:1.9}
+.article-body li::marker{color:var(--accent)}
+.article-body blockquote{margin:26px 0;padding:16px 22px;border-left:4px solid var(--accent);background:rgba(113,157,218,.09);border-radius:0 14px 14px 0;color:var(--muted)}
+.article-body blockquote p{margin:0}
+.article-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(113,157,218,.45)}
+.article-body a:hover{text-decoration-color:var(--accent)}
+.article-body img{max-width:100%;margin:26px 0;border-radius:16px;box-shadow:0 14px 34px rgba(8,25,52,.12)}
+.article-body hr{border:0;height:2px;margin:40px 0;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(113,157,218,.6),transparent)}
+.article-body code{background:rgba(113,157,218,.14);padding:2px 7px;border-radius:7px;font-size:.92em}
+.article-body pre{margin:24px 0}
+.article-body pre code{background:none;padding:0}
+.article-body table{width:100%;margin:24px 0;border-collapse:collapse;font-size:14px}
+.article-body th,.article-body td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+.article-body th{background:rgba(113,157,218,.12)}
+.article-nav{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:55px}
+.article-nav-link{display:flex;flex-direction:column;gap:7px;padding:17px 20px;border:1px solid var(--line);border-radius:16px;background:var(--card);transition:border-color .25s,transform .25s,box-shadow .25s}
+.article-nav-link:hover{border-color:rgba(130,177,235,.55);transform:translateY(-2px);box-shadow:0 12px 30px rgba(8,25,52,.08)}
+.article-nav-link small{color:var(--muted);font-size:10px;letter-spacing:.14em}
+.article-nav-link strong{font-size:14px;line-height:1.5;font-weight:600}
+.article-nav-link.next{align-items:flex-end;text-align:right}
+.article-nav-link.placeholder{visibility:hidden}
+.article-back{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:11px 20px;border:1px solid var(--line);border-radius:999px;font-size:13px;transition:background .25s,color .25s,border-color .25s}
+.article-back:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* V19: mobile refinements - tidier header, calmer hero, content-first order */
+@media(max-width:900px){
+  .site-header{height:auto!important;min-height:60px;padding:10px 12px}
+  .site-header nav{flex-wrap:wrap;justify-content:center;gap:5px 10px;overflow:visible;padding:0 64px 0 70px;font-size:11.5px;line-height:1.5}
+  .site-header nav a{padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.14)}
+  .site-header nav a.active{background:rgba(255,255,255,.32)}
+  .site-hero-carousel{height:42svh;min-height:290px}
+  .site-hero-title{padding-top:18px}
+  .site-hero-title h1{font-size:clamp(30px,8.5vw,42px)}
+  .home-lower .home-data{order:1}
+  .home-lower .home-right{order:2}
+  .home-lower .profile-sidebar{order:3}
+  .project-card{min-height:0}
+  .section{padding:48px 0}
+  .post-row{grid-template-columns:1fr;gap:12px;padding:20px 20px 20px 26px}
+  .post-arrow{display:none}
+  .article-nav{grid-template-columns:1fr}
+  .article{padding:60px 0 90px}
 }

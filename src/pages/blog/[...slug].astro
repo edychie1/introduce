@@ -10,14 +10,33 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const allPosts = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const currentIndex = allPosts.findIndex((item) => item.id === post.id);
+const newerPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+const olderPost = currentIndex >= 0 && currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 ---
 <BaseLayout title={post.data.title} description={post.data.description}>
   <SiteHero title={post.data.title} />
   <DynamicDivider />
   <article class="article">
-    <time datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('zh-TW')}</time>
-    {post.data.tags.length > 0 && <div class="article-tags" aria-label="文章標籤">{post.data.tags.map((tag) => <a class="post-tag" href={`${base}blog/#tag=${encodeURIComponent(tag)}`}>#{tag}</a>)}</div>}
+    <header class="article-header">
+      <p class="article-kicker">BLOG · 文章</p>
+      <time class="article-date" datetime={post.data.pubDate.toISOString()}>{post.data.pubDate.toLocaleDateString('zh-TW')}</time>
+      {post.data.tags.length > 0 && <div class="article-tags" aria-label="文章標籤">{post.data.tags.map((tag) => <a class="post-tag" href={`${base}blog/#tag=${encodeURIComponent(tag)}`}>#{tag}</a>)}</div>}
+    </header>
     <div class="article-body"><Content /></div>
+    <nav class="article-nav" aria-label="文章導覽">
+      {olderPost ? (
+        <a class="article-nav-link prev" href={`${base}blog/${olderPost.id}/`}><small>上一篇</small><strong>{olderPost.data.title}</strong></a>
+      ) : (
+        <span class="article-nav-link placeholder" aria-hidden="true"></span>
+      )}
+      {newerPost ? (
+        <a class="article-nav-link next" href={`${base}blog/${newerPost.id}/`}><small>下一篇</small><strong>{newerPost.data.title}</strong></a>
+      ) : (
+        <span class="article-nav-link placeholder" aria-hidden="true"></span>
+      )}
+    </nav>
     <a class="article-back" href={`${base}blog/`}>← 返回文章列表</a>
   </article>
 </BaseLayout>

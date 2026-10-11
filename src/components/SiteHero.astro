@@ -8,7 +8,6 @@ const { title } = Astro.props;
       <img src={image.src} alt="" aria-hidden="true" class:list={{ active: index === 0 }} loading={index === 0 ? 'eager' : 'lazy'} />
     ))}
     <div class="site-hero-shade"></div>
-    <div class="hero-mark" aria-hidden="true"><i class="hero-mark-vline"></i><span class="hero-mark-text">ecc</span><i class="hero-mark-hline"></i></div>
     <div class="site-hero-title"><h1>{title}</h1></div>
   </div>
 </section>

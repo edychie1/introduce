@@ -1,9 +1,13 @@
 ---
+import { getCollection } from 'astro:content';
 import { projects, skills } from '../data/site';
+const pageFiles = import.meta.glob('/src/pages/**/*.astro');
+const staticPages = Object.keys(pageFiles).filter((path) => !path.includes('[')).length;
+const posts = await getCollection('blog');
 const stats = [
   { value: projects.length, label: '作品' },
   { value: skills.length, label: '技能' },
-  { value: 6, label: '網站頁面' },
+  { value: staticPages + posts.length, label: '網站頁面' },
   { value: '∞', label: '想法' }
 ];
 ---
